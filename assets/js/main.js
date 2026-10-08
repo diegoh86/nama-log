@@ -35,31 +35,34 @@ function initNavbar() {
 // 2. Mobile Menu Toggle
 function initMobileMenu() {
   const menuBtn = document.getElementById('mobile-menu-btn');
-  const closeBtn = document.getElementById('mobile-menu-close');
   const mobileMenu = document.getElementById('mobile-menu');
-  const backdrop = document.getElementById('mobile-menu-backdrop');
-  const menuLinks = document.querySelectorAll('.mobile-menu-link');
 
   if (!menuBtn || !mobileMenu) return;
 
-  const openMenu = () => {
-    mobileMenu.classList.remove('translate-x-full');
-    backdrop?.classList.remove('opacity-0', 'pointer-events-none');
-    document.body.classList.add('overflow-hidden');
+  const toggleMenu = () => {
+    mobileMenu.classList.toggle('hidden');
+    
+    // Optional: Swap icon from bars to X
+    const icon = menuBtn.querySelector('i');
+    if (icon) {
+      if (mobileMenu.classList.contains('hidden')) {
+        icon.classList.replace('fa-xmark', 'fa-bars');
+      } else {
+        icon.classList.replace('fa-bars', 'fa-xmark');
+      }
+    }
   };
 
-  const closeMenu = () => {
-    mobileMenu.classList.add('translate-x-full');
-    backdrop?.classList.add('opacity-0', 'pointer-events-none');
-    document.body.classList.remove('overflow-hidden');
-  };
+  menuBtn.addEventListener('click', toggleMenu);
 
-  menuBtn.addEventListener('click', openMenu);
-  closeBtn?.addEventListener('click', closeMenu);
-  backdrop?.addEventListener('click', closeMenu);
-
-  menuLinks.forEach(link => {
-    link.addEventListener('click', closeMenu);
+  // Close menu when clicking any link inside it
+  const links = mobileMenu.querySelectorAll('a');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      const icon = menuBtn.querySelector('i');
+      if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
+    });
   });
 }
 
